@@ -6,6 +6,9 @@ using namespace std;
 int choice;
 int run = 1;
 string filename = "nic";
+int stopTime = 100;
+float aTemp = 0.95;
+
 
 int main()
 {
@@ -16,10 +19,12 @@ int main()
     {
         cout << "MENU:\n";;
         cout << "1. Wczytaj dane z pliku\n";
-        cout << "2. Wygeneruj losowe dane\n";
-        cout << "3. Wyswietl wczytane dane\n";
+        cout << "2. Wprowadz kryterium stopu\n";
+        cout << "3. Ustaw wspolczynnik zmiany temperatury\n";
         cout << "4. Uruchom algorytm\n";
-        cout << "5. Zakoncz\n";
+        cout << "5. Zapisz sciezke do pliku\n";
+        cout << "6. Oblicz sciezke z zapisanego pliku\n";
+        cout << "7. Zakoncz\n";
 
         cin >> choice;
         //choice = 4;
@@ -34,22 +39,14 @@ int main()
         break;
         case 2:
         {
-            cout << "Ile wierzcholkow?\n";
-            int N;
-            cin >> N;
-            cout << "Podaj nazwe pliku wraz z rozszerzeniem:\n";
-            string newFilename;
-            cin >> newFilename;
-
-            fHandler.generate(N, newFilename);
+            cout << "Po ilu sekundach zakonczyc dzialanie?\n";
+            cin >> stopTime;
         }
         break;
         case 3:
         {
-            if (filename != "nic")
-                fHandler.print(filename);
-            else
-                cout << "Wczytaj dane z pliku!\n";
+            cout << "Wspolczynnik zmiany temperatury:\n";
+            cin >> aTemp;
         }
         break;
         case 4:
