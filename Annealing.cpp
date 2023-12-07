@@ -53,8 +53,15 @@ long long int Annealing::read_QPC()
 //------------------------------------------------------------------------------------------------------------------------------------
 double Annealing::countSum()
 {
-	
-	return 0.0;
+	currentSum = 0;
+
+	for (int i = 0; i < N; i++)
+	{
+		currentSum += matrix[currentPath[i]][currentPath[(i + 1) % N]];
+		// cout << "[" << i << "]" << "[" << (i + 1) % N << "]" << " = " << (matrix[currentPath[i]][currentPath[(i + 1) % N]]) << "\t currentSum = " << currentSum << "\n";
+	}
+	// cout << "countSum returns = " << currentSum << "\n";
+	return currentSum;
 }
 //------------------------------------------------------------------------------------------------------------------------------------
 void Annealing::startingPath() // tutaj trzeba zrobic greedy algorithm. moze zawsze najkrotsza sciezka, nie powinno byc bardzo trudne
@@ -83,6 +90,8 @@ long double Annealing::TSPAnnealing()
 	cout << "Miejsce na algorytm\n";
 	Sleep(1000);
 	bestPath = currentPath;
+	countSum();
+	bestSum = currentSum;
 	// koniec algorytmu
 
 
@@ -95,6 +104,9 @@ long double Annealing::TSPAnnealing()
 	fstream file;
 	file.open("temp.txt", ios::out);
 	file << N << endl;
+
+	cout << "Waga = " << bestSum << endl;
+	cout << "Sciezka: ";
 
 	for (int i = 0; i <= bestPath.size(); i++)
 	{
@@ -109,7 +121,7 @@ long double Annealing::TSPAnnealing()
 			file << bestPath[0] << "\n";
 		}
 	}
-
+	cout << "\n";
 	file.close();
 
 	return timeElapsed;

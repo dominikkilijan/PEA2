@@ -76,7 +76,7 @@ void AdjacencyMatrix::runAlgorithm(int stopTime, double alpha)
 		//Dynamic dynamic(N, matrix);
 		//sumElapsed += dynamic.TSPDynamic();
 		Annealing sa(N, stopTime, alpha, matrix);
-		sa.TSPAnnealing();
+		sumElapsed += sa.TSPAnnealing();
 	}
 	cout << "Sredni czas wykonania w ms: " << setprecision(10) << sumElapsed << endl;
 	
