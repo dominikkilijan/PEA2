@@ -65,7 +65,7 @@ void AdjacencyMatrix::fillFromFile(fstream* file) // do zmiany jesli zdaze
 	else cout << "Nie udalo sie otworzyc pliku! (w AdjancencyMatrix)\n";
 }
 //------------------------------------------------------------------------------------------------------------------------------------
-void AdjacencyMatrix::runAlgorithm()
+void AdjacencyMatrix::runAlgorithm(int stopTime, double alpha)
 {
 	// wyswietlenie wypelnionej macierzy
 	printAdjacencyMatrix();
@@ -73,8 +73,10 @@ void AdjacencyMatrix::runAlgorithm()
 	// uruchomienie algorytmu. Na etapie mierzenia czasow modyfikowana byla liczba iteracji w petli for
 	for (int i = 0; i < 1; i++)
 	{
-		Dynamic dynamic(N, matrix);
-		sumElapsed += dynamic.TSPDynamic();
+		//Dynamic dynamic(N, matrix);
+		//sumElapsed += dynamic.TSPDynamic();
+		Annealing sa(N, stopTime, alpha, matrix);
+		sa.TSPAnnealing();
 	}
 	cout << "Sredni czas wykonania w ms: " << setprecision(10) << sumElapsed << endl;
 	

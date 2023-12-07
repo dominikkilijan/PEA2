@@ -62,9 +62,9 @@ int FileHandler::getN(string filename)
 	return N;
 }
 //------------------------------------------------------------------------------------------------------------------------------------
-void FileHandler::runAlgorithm()
+void FileHandler::runAlgorithm(int stopTime, double alpha)
 {
-	adMat.runAlgorithm();
+	adMat.runAlgorithm(stopTime, alpha);
 }
 //------------------------------------------------------------------------------------------------------------------------------------
 void FileHandler::renameFile(string a, string b) 

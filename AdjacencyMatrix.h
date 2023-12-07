@@ -13,7 +13,7 @@ public:
 	void deleteAdjacencyMatrix();
 	void createAdjacencyMatrix();
 	int** getAdjacencyMatrix();
-	void runAlgorithm();
+	void runAlgorithm(int, double);
 
 
 private:

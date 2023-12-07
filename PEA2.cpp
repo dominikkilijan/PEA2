@@ -11,7 +11,7 @@ int run = 1;
 string filename = "nic";
 string filename2;
 int stopTime = 100;
-float aTemp = 0.95;
+double alpha = 0.95;
 int** adMatrix;
 int N;
 
@@ -33,7 +33,7 @@ int main()
         cout << "7. Zakoncz\n";
 
         cin >> choice;
-        //choice = 4;
+        //choice = 1;
         system("CLS"); // czyszczenie ekranu
         switch (choice)
         {
@@ -48,6 +48,7 @@ int main()
                 adMatrix = fHandler.openFile(filename);
             else
                 cout << "Wczytaj dane z pliku!\n";
+            choice = 4;
         }
         break;
         case 2:
@@ -59,13 +60,13 @@ int main()
         case 3:
         {
             cout << "Wspolczynnik zmiany temperatury:\n";
-            cin >> aTemp;
+            cin >> alpha;
         }
         break;
         case 4:
         {
             if (filename != "nic")
-                fHandler.runAlgorithm();
+                fHandler.runAlgorithm(stopTime, alpha);
             else
                 cout << "Wczytaj dane z pliku!\n";
 
@@ -91,7 +92,7 @@ int main()
             {
                 cout << "Podaj nazwe pliku:\n";
                 //cin >> filename2;
-                filename2 = "test.txt";
+                filename2 = "temp.txt";
                 double fileSum = fHandler.readPathFromFile(filename2);
                 cout << "Waga = " << fileSum << "\n";
             }
