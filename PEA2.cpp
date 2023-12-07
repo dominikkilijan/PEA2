@@ -2,12 +2,14 @@
 #include "AdjacencyMatrix.h"
 #include <iostream>
 #include <vector>
+#include <cstdio>
 
 using namespace std;
 
 int choice;
 int run = 1;
 string filename = "nic";
+string filename2;
 int stopTime = 100;
 float aTemp = 0.95;
 int** adMatrix;
@@ -22,7 +24,7 @@ int main()
     while (run)
     {
         cout << "MENU:\n";;
-        cout << "1. Wybierz plik\n";
+        cout << "1. Wczytaj dane z pliku\n";
         cout << "2. Wprowadz kryterium stopu\n";
         cout << "3. Ustaw wspolczynnik zmiany temperatury\n";
         cout << "4. Uruchom algorytm\n";
@@ -41,7 +43,6 @@ int main()
             //cin >> filename;
             filename = "tsp_5.txt";
             N = fHandler.getN(filename);
-            cout << "N = fHandler.getN(filename) = " << N << endl;
 
             if (filename != "nic")
                 adMatrix = fHandler.openFile(filename);
@@ -72,6 +73,41 @@ int main()
         break;
         case 5:
         {
+            if (filename != "nic")
+            {
+                cout << "Podaj nazwe pliku:\n";
+                cin >> filename2;
+                fHandler.renameFile("temp.txt", filename2);
+            }
+            else
+                cout << "Wczytaj dane z pliku!\n";
+        }
+        break;
+        case 6:
+        {
+            
+
+            if (filename != "nic")
+            {
+                cout << "Podaj nazwe pliku:\n";
+                //cin >> filename2;
+                filename2 = "test.txt";
+                double fileSum = fHandler.readPathFromFile(filename2);
+                cout << "Waga = " << fileSum << "\n";
+            }
+            else
+                cout << "Wczytaj dane z pliku!\n";
+            
+        }
+        break;
+        case 7:
+        {
+            cout << "Koniec programu\n";
+            run = 0;
+        }
+        break;
+        case 8:
+        {
             for (int i = 0; i < N; i++)
             {
                 for (int j = 0; j < N; j++)
@@ -81,28 +117,6 @@ int main()
                 cout << "\n";
             }
         }
-        break;
-        case 6:
-        {
-            cout << "adMatrix = " << adMatrix << endl;
-        }
-        break;
-        case 7:
-        {
-            cout << "Koniec programu\n";
-            run = 0;
-            // czyszczenie adMatrix
-            if (adMatrix != nullptr)
-            {
-                for (int i = 0; i < N; i++)
-                {
-                    delete[] adMatrix[i];
-                }
-                delete[] adMatrix;
-                adMatrix = nullptr;
-            }
-        }
-        break;
         default:
             cout << "Nieprawidlowy numer!\n";
             break;

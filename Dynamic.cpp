@@ -6,6 +6,7 @@
 #include <time.h>
 #include <vector>
 #include <bitset>
+#include <fstream>
 
 using namespace std;
 
@@ -103,14 +104,21 @@ long double Dynamic::TSPDynamic()
 	long double timeElapsed;
 	timeElapsed = ((1000.0 * elapsed) / frequency);
 
-	// wyswietlenie wyniku
+	// wyswietlenie wyniku i zapisanie do pliku
+	fstream file;
+	file.open("temp.txt", ios::out);
+	file << N << endl;
 	cout << "Waga = " << finalSum << endl;
 	cout << "Sciezka: 0->";
+	file << 0 << endl;
 	for (int i = 0; i <= bestPath.size() - 1; i++)
 	{
 		cout << bestPath[i] << "->";
+		file << bestPath[i] << endl;
 	}
 	cout << "0" << endl;
+	file << 0 << endl;
+	file.close();
 
 	return timeElapsed;
 }

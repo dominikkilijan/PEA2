@@ -21,32 +21,31 @@ int** FileHandler::openFile(string filename)
 		adMat.fillFromFile(&file); // wypelnianie macierzy sasiedztwa
 	else cout << "Nie udalo sie otworzyc pliku!\n";
 	file.close();
-	cout << "adMat w FileHandler:\n";
-	int** matrix = adMat.getAdjacencyMatrix();
+	matrix = adMat.getAdjacencyMatrix();
 	return matrix;
 }
 //------------------------------------------------------------------------------------------------------------------------------------
-void FileHandler::writePathToFile(string filename, int N, int* path)
+double FileHandler::readPathFromFile(string filename)
 {
-	file.open(filename, ios::out);
-	file << N << "\n";
+	int N, var1, var2;
+	double sum = 0;
+	file.open(filename, ios::in);
 	if (file.is_open())
 	{
-
+		file >> N;
+		file >> var1;
+		cout << var1;
 		for (int i = 0; i < N; i++)
 		{
-			file << path[i] << "\n";
+			file >> var2;
+			cout << "->" << var2;
+			sum += matrix[var1][var2];
+			var1 = var2;
 		}
+		cout << "\n";
 	}
-	else cout << "Nie udalo sie otworzyc pliku!\n";
-	file.close();
-}
-//------------------------------------------------------------------------------------------------------------------------------------
-float FileHandler::readPathFromFile(string filename)
-{
 	
-	
-	return 0.0f;
+	return sum;
 }
 //------------------------------------------------------------------------------------------------------------------------------------
 int FileHandler::getN(string filename)
@@ -67,5 +66,12 @@ void FileHandler::runAlgorithm()
 {
 	adMat.runAlgorithm();
 }
+//------------------------------------------------------------------------------------------------------------------------------------
+void FileHandler::renameFile(string a, string b) 
+{
+	rename(a.c_str(), b.c_str());
+}
+//------------------------------------------------------------------------------------------------------------------------------------
+
 
 

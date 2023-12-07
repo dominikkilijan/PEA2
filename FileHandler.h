@@ -11,11 +11,13 @@ public:
 	void generate(int, string);
 	void print(string);
 	void writePathToFile(string, int, int*);
-	float readPathFromFile(string);
+	double readPathFromFile(string);
 	int getN(string);
 	void runAlgorithm();
+	void renameFile(string, string);
 
 private:
 	fstream file;
+	int** matrix;
 };
 
