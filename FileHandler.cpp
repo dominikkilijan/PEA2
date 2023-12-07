@@ -6,58 +6,66 @@
 #include <string>
 #include <time.h>
 #include <cstdlib>
+#include <vector>
 
 using namespace std;
 
+AdjacencyMatrix adMat;
 
 //------------------------------------------------------------------------------------------------------------------------------------
-void FileHandler::openFile(string filename)
+int** FileHandler::openFile(string filename)
 {
 	cout << "Otwieranie pliku tekstowego \"" << filename << "\"\n";
-	AdjacencyMatrix adMat;
 	file.open(filename, ios::in);
 	if (file.is_open())
 		adMat.fillFromFile(&file); // wypelnianie macierzy sasiedztwa
 	else cout << "Nie udalo sie otworzyc pliku!\n";
 	file.close();
+	cout << "adMat w FileHandler:\n";
+	int** matrix = adMat.getAdjacencyMatrix();
+	return matrix;
 }
 //------------------------------------------------------------------------------------------------------------------------------------
-
-void FileHandler::generate(int N, string filename)
+void FileHandler::writePathToFile(string filename, int N, int* path)
 {
 	file.open(filename, ios::out);
+	file << N << "\n";
 	if (file.is_open())
 	{
-		srand(time(NULL));
-		file << N << "\n"; // wpisanie liczby wierzcholkow jako pierwsza liczbe w pliku
-		for (int i = 0; i < N; i++) // wiersze
+
+		for (int i = 0; i < N; i++)
 		{
-			for (int j = 0; j < N; j++) // kolumny
-			{
-				if
-					(i == j) file << "-1\t";
-				else
-					file << rand() % 100 + 1 << "\t"; // generowanie pseudolosowej liczby z zakresu <1-100>
-			}
-			file << "\n";
+			file << path[i] << "\n";
 		}
 	}
 	else cout << "Nie udalo sie otworzyc pliku!\n";
 	file.close();
 }
 //------------------------------------------------------------------------------------------------------------------------------------
-// wyswietlanie zawartosci pliku linia po linii
-void FileHandler::print(string filename)
+float FileHandler::readPathFromFile(string filename)
 {
+	
+	
+	return 0.0f;
+}
+//------------------------------------------------------------------------------------------------------------------------------------
+int FileHandler::getN(string filename)
+{
+	int N = 0;
 	file.open(filename, ios::in);
 	if (file.is_open())
 	{
-		string line;
-		while (getline(file, line))
-			cout << line << "\n";
+		file >> N;
 	}
 	else cout << "Nie udalo sie otworzyc pliku!\n";
 	file.close();
+	
+	return N;
+}
+//------------------------------------------------------------------------------------------------------------------------------------
+void FileHandler::runAlgorithm()
+{
+	adMat.runAlgorithm();
 }
 
 

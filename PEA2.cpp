@@ -1,5 +1,7 @@
 ﻿#include "FileHandler.h"
+#include "AdjacencyMatrix.h"
 #include <iostream>
+#include <vector>
 
 using namespace std;
 
@@ -8,6 +10,8 @@ int run = 1;
 string filename = "nic";
 int stopTime = 100;
 float aTemp = 0.95;
+int** adMatrix;
+int N;
 
 
 int main()
@@ -18,7 +22,7 @@ int main()
     while (run)
     {
         cout << "MENU:\n";;
-        cout << "1. Wczytaj dane z pliku\n";
+        cout << "1. Wybierz plik\n";
         cout << "2. Wprowadz kryterium stopu\n";
         cout << "3. Ustaw wspolczynnik zmiany temperatury\n";
         cout << "4. Uruchom algorytm\n";
@@ -33,8 +37,16 @@ int main()
         {
         case 1:
         {
-            cout << "Podaj nazwe pliku do wyswietlenia:\n";
-            cin >> filename;
+            cout << "Podaj nazwe pliku:\n";
+            //cin >> filename;
+            filename = "tsp_5.txt";
+            N = fHandler.getN(filename);
+            cout << "N = fHandler.getN(filename) = " << N << endl;
+
+            if (filename != "nic")
+                adMatrix = fHandler.openFile(filename);
+            else
+                cout << "Wczytaj dane z pliku!\n";
         }
         break;
         case 2:
@@ -52,17 +64,45 @@ int main()
         case 4:
         {
             if (filename != "nic")
-                fHandler.openFile(filename);
+                fHandler.runAlgorithm();
             else
                 cout << "Wczytaj dane z pliku!\n";
 
         }
         break;
         case 5:
+        {
+            for (int i = 0; i < N; i++)
+            {
+                for (int j = 0; j < N; j++)
+                {
+                    cout << adMatrix[i][j] << "\t";
+                }
+                cout << "\n";
+            }
+        }
+        break;
+        case 6:
+        {
+            cout << "adMatrix = " << adMatrix << endl;
+        }
+        break;
+        case 7:
+        {
             cout << "Koniec programu\n";
             run = 0;
-            break;
-
+            // czyszczenie adMatrix
+            if (adMatrix != nullptr)
+            {
+                for (int i = 0; i < N; i++)
+                {
+                    delete[] adMatrix[i];
+                }
+                delete[] adMatrix;
+                adMatrix = nullptr;
+            }
+        }
+        break;
         default:
             cout << "Nieprawidlowy numer!\n";
             break;

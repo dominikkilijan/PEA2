@@ -1,5 +1,6 @@
 #include "AdjacencyMatrix.h"
-//#include "Dynamic.h"
+#include "Dynamic.h"
+#include "Annealing.h"
 #include <iostream>
 #include <iomanip>
 
@@ -25,6 +26,7 @@ void AdjacencyMatrix::createAdjacencyMatrix()
 		}
 	}
 }
+
 //------------------------------------------------------------------------------------------------------------------------------------
 
 void AdjacencyMatrix::deleteAdjacencyMatrix()
@@ -59,19 +61,23 @@ void AdjacencyMatrix::fillFromFile(fstream* file) // do zmiany jesli zdaze
 				matrix[i][j] = val;
 			}
 		}
-		// wyswietlenie wypelnionej macierzy
-		printAdjacencyMatrix();
-
-		// uruchomienie algorytmu. Na etapie mierzenia czasow modyfikowana byla liczba iteracji w petli for
-		for (int i = 0; i < 1; i++)
-		{
-			//Dynamic dynamic(N, matrix);
-			//sumElapsed += dynamic.TSPDynamic();
-		}
-
-		cout << "Sredni czas wykonania w ms: " << setprecision(10) << sumElapsed << endl;
 	}
 	else cout << "Nie udalo sie otworzyc pliku! (w AdjancencyMatrix)\n";
+}
+//------------------------------------------------------------------------------------------------------------------------------------
+void AdjacencyMatrix::runAlgorithm()
+{
+	// wyswietlenie wypelnionej macierzy
+	printAdjacencyMatrix();
+		
+	// uruchomienie algorytmu. Na etapie mierzenia czasow modyfikowana byla liczba iteracji w petli for
+	for (int i = 0; i < 1; i++)
+	{
+		Dynamic dynamic(N, matrix);
+		sumElapsed += dynamic.TSPDynamic();
+	}
+	cout << "Sredni czas wykonania w ms: " << setprecision(10) << sumElapsed << endl;
+	
 }
 //------------------------------------------------------------------------------------------------------------------------------------
 
@@ -87,4 +93,7 @@ void AdjacencyMatrix::printAdjacencyMatrix()
 	}
 }
 //------------------------------------------------------------------------------------------------------------------------------------
-
+int** AdjacencyMatrix::getAdjacencyMatrix()
+{
+	return matrix;
+}
