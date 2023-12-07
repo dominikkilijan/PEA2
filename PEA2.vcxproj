@@ -131,6 +131,7 @@
     <ClCompile Include="Annealing.cpp" />
     <ClCompile Include="Dynamic.cpp" />
     <ClCompile Include="FileHandler.cpp" />
+    <ClCompile Include="NearestNeighbour.cpp" />
     <ClCompile Include="PEA2.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -138,6 +139,7 @@
     <ClInclude Include="Annealing.h" />
     <ClInclude Include="Dynamic.h" />
     <ClInclude Include="FileHandler.h" />
+    <ClInclude Include="NearestNeighbour.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -5,12 +5,12 @@
 using namespace std;
 
 //------------------------------------------------------------------------------------------------------------------------------------
-NearestNeighbour::NearestNeighbour(int n, int** m)
+NearestNeighbour::NearestNeighbour(int n, int** m, vector<int>& path)
 {
 	matrix = m;
 	N = n;
-
-	visited.reserve(N);
+	currentPath = path;
+	visited.resize(N, false);
 }
 //------------------------------------------------------------------------------------------------------------------------------------
 NearestNeighbour::~NearestNeighbour()
@@ -18,21 +18,20 @@ NearestNeighbour::~NearestNeighbour()
 	matrix = nullptr;
 }
 //------------------------------------------------------------------------------------------------------------------------------------
-void NearestNeighbour::findNearestNeighbourPath(vector<int>& currentPath)
+void NearestNeighbour::findNearestNeighbourPath()
 {
-	currentPath.clear();
 	int start = 0;
-	currentPath.push_back(start);
+	currentPath.emplace_back(start);
 	visited[start] = true;
 
-	for (int i = 0; i < N; i++)
+	for (int i = 0; i < N-1; i++)
 	{
 		int nearestNeighbour = findNearestNeighbour(start);
-		currentPath.push_back(nearestNeighbour);
+		currentPath.emplace_back(nearestNeighbour);
 		visited[nearestNeighbour] = true;
 		start = nearestNeighbour;
+		printCurrentPath();
 	}
-	currentPath.push_back(currentPath.front());
 }
 //------------------------------------------------------------------------------------------------------------------------------------
 int NearestNeighbour::findNearestNeighbour(int v)
@@ -49,4 +48,12 @@ int NearestNeighbour::findNearestNeighbour(int v)
 		}
 	}
 	return nearestNeighbour;
+}
+//------------------------------------------------------------------------------------------------------------------------------------
+void NearestNeighbour::printCurrentPath()
+{
+	for (int city : currentPath) {
+		std::cout << city << " ";
+	}
+	std::cout << "\n";
 }

@@ -1,5 +1,6 @@
 #include "Annealing.h"
 #include "AdjacencyMatrix.h"
+#include "NearestNeighbour.h"
 #include <iostream>
 #include <iomanip>
 #include <Windows.h>
@@ -29,16 +30,19 @@ Annealing::Annealing(int n, int sTime, double alpha, int** m)
 	finalPath.reserve(N);
 
 	// wypelnienie wektora (przy greedy juz nie bedzie potrzebne)
-	for (int i = 0; i < N; i++)
+	/*for (int i = 0; i < N; i++)
 	{
 		currentPath.emplace_back(i);
 		bestPath.emplace_back(i);
 		finalPath.emplace_back(i);
-	}
+	}*/
 
 	// poczatkowa sciezka
-	randomStartingPath();
-	printCurrentPath();
+	//randomStartingPath();
+	NearestNeighbour nn(N, matrix, currentPath);
+	nn.findNearestNeighbourPath();
+	cout << "Po wywolaniu findNearestNeighbourPath() \n";
+	PrintBestPath();
 
 	// obliczenie temperatury poczatkowej
 	startingTemperature();
@@ -78,11 +82,6 @@ void Annealing::randomStartingPath() // tutaj trzeba zrobic greedy algorithm. mo
 	cout << "Poczatkowa sciezka\n";
 	auto rng = default_random_engine{};
 	shuffle(begin(currentPath), end(currentPath), rng);
-}
-//------------------------------------------------------------------------------------------------------------------------------------
-void Annealing::startingPath() // nearestNeighbour
-{
-	
 }
 //------------------------------------------------------------------------------------------------------------------------------------
 void Annealing::startingTemperature()
