@@ -12,6 +12,7 @@ public:
 	long long int read_QPC();
 	double countSum(vector<int>);
 	void startingPath();
+	void randomStartingPath();
 	void startingTemperature();
 	long double TSPAnnealing();
 	int simulatedAnnealing();

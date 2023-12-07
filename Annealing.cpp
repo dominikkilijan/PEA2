@@ -37,7 +37,7 @@ Annealing::Annealing(int n, int sTime, double alpha, int** m)
 	}
 
 	// poczatkowa sciezka
-	startingPath();
+	randomStartingPath();
 	printCurrentPath();
 
 	// obliczenie temperatury poczatkowej
@@ -73,11 +73,16 @@ double Annealing::countSum(vector<int> countPath)
 	return countSum;
 }
 //------------------------------------------------------------------------------------------------------------------------------------
-void Annealing::startingPath() // tutaj trzeba zrobic greedy algorithm. moze zawsze najkrotsza sciezka, nie powinno byc bardzo trudne
+void Annealing::randomStartingPath() // tutaj trzeba zrobic greedy algorithm. moze zawsze najkrotsza sciezka, nie powinno byc bardzo trudne
 {
 	cout << "Poczatkowa sciezka\n";
 	auto rng = default_random_engine{};
 	shuffle(begin(currentPath), end(currentPath), rng);
+}
+//------------------------------------------------------------------------------------------------------------------------------------
+void Annealing::startingPath() // nearestNeighbour
+{
+	
 }
 //------------------------------------------------------------------------------------------------------------------------------------
 void Annealing::startingTemperature()
@@ -121,17 +126,13 @@ bool Annealing::probability()
 {
 	double randomNumber = (double)(rand()) / (RAND_MAX);
 	double probabilityNumber = exp(-delta / temperature);
-	//cout << "randomNumber = " << randomNumber << "\n";
-	//cout << "probabilityNumber = " << probabilityNumber << "\n";
 
 	if (randomNumber < probabilityNumber)
 	{
-		//cout << "Prawdopodobienstwo zaakceptowane\n";
 		return TRUE;
 	}
 	else
 	{
-		//cout << "Prawdopodobienstwo odrzucone\n";
 		return FALSE;
 	}
 }
@@ -139,7 +140,6 @@ bool Annealing::probability()
 void Annealing::nextTemperature()
 {
 	temperature *= a;
-	//cout << "temperature = " << temperature << "\n";
 }
 //------------------------------------------------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------------------------------------------------
