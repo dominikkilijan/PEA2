@@ -157,12 +157,18 @@ void Annealing::PrintBestPath()
 	cout << "\n";
 }
 //------------------------------------------------------------------------------------------------------------------------------------
-void Annealing::neighbourPath() // sasiedztwo
+void Annealing::neighbourPath() // sasiedztwo swap2
 {
-	// swap2
-	// insert
-	// invert
+	int id1 = -1;
+	int id2 = -1;
 
+	id1 = rand() % N;
+	do
+	{
+		id2 = rand() % N;
+	} while (id1 == id2);
+
+	iter_swap(currentPath.begin() + id1, currentPath.begin() + id2);
 }
 //------------------------------------------------------------------------------------------------------------------------------------
 bool Annealing::probability()
