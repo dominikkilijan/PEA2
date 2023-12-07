@@ -17,6 +17,8 @@ public:
 	int tsp(int, int);
 	void printCurrentPath();
 	void PrintBestPath();
+	void neighourPath();
+	double probability();
 
 
 private:

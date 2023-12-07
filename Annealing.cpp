@@ -15,26 +15,26 @@ using namespace std;
 //------------------------------------------------------------------------------------------------------------------------------------
 Annealing::Annealing(int n, int sTime, double alpha, int** m)
 {
-	cout << "Poczatek konstruktora\n";
 	N = n;
 	stopTime = sTime;
 	a = alpha;
 	matrix = m;
-
-	cout << "Rezerwacja miejsca na wektory\n";
+	// zarezerwowanie odpowiedniej ilosci miejsca
 	currentPath.reserve(N);
 	bestPath.reserve(N);
 
+	// wypelnienie wektora (przy greedy juz nie bedzie potrzebne)
 	cout << "Wypelnienie wektorow\n";
 	for (int i = 0; i < N; i++)
 	{
 		currentPath.emplace_back(i);
-		bestPath.emplace_back(i);
 	}
 
+	// poczatkowa sciezka
 	startingPath();
 	printCurrentPath();
 
+	// obliczenie temperatury poczatkowej
 	startingTemperature();
 	cout << "Starting temperature = " << temperature << "\n";
 }
@@ -58,9 +58,8 @@ double Annealing::countSum()
 	for (int i = 0; i < N; i++)
 	{
 		currentSum += matrix[currentPath[i]][currentPath[(i + 1) % N]];
-		// cout << "[" << i << "]" << "[" << (i + 1) % N << "]" << " = " << (matrix[currentPath[i]][currentPath[(i + 1) % N]]) << "\t currentSum = " << currentSum << "\n";
 	}
-	// cout << "countSum returns = " << currentSum << "\n";
+
 	return currentSum;
 }
 //------------------------------------------------------------------------------------------------------------------------------------
@@ -149,5 +148,15 @@ void Annealing::PrintBestPath()
 		cout << bestPath[i] << " ";
 	}
 	cout << "\n";
+}
+//------------------------------------------------------------------------------------------------------------------------------------
+void Annealing::neighbourPath() // sasiedztwo
+{
+
+}
+//------------------------------------------------------------------------------------------------------------------------------------
+double Annealing::probability()
+{
+	return 0.0;
 }
 //------------------------------------------------------------------------------------------------------------------------------------
