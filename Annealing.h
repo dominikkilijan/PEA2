@@ -10,7 +10,7 @@ public:
 	Annealing(int, int, double, int**); // wierzcholki, stopTime, alfa, macierz 
 	~Annealing();
 	long long int read_QPC();
-	double countSum();
+	double countSum(vector<int>);
 	void startingPath();
 	void startingTemperature();
 	long double TSPAnnealing();
@@ -25,13 +25,14 @@ public:
 private:
 	vector<int> currentPath;
 	vector<int> bestPath;
+	vector<int> finalPath;
 
 	int N;
 	int** matrix;
 	double temperature;
 	double a;
 	int stopTime;
-	double bestSum, currentSum;
+	double bestSum, currentSum, finalSum;
 	double delta;
 };
 

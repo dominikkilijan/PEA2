@@ -26,12 +26,15 @@ Annealing::Annealing(int n, int sTime, double alpha, int** m)
 	// zarezerwowanie odpowiedniej ilosci miejsca
 	currentPath.reserve(N);
 	bestPath.reserve(N);
+	finalPath.reserve(N);
 
 	// wypelnienie wektora (przy greedy juz nie bedzie potrzebne)
 	cout << "Wypelnienie wektorow\n";
 	for (int i = 0; i < N; i++)
 	{
 		currentPath.emplace_back(i);
+		bestPath.emplace_back(i);
+		finalPath.emplace_back(i);
 	}
 
 	// poczatkowa sciezka
@@ -58,16 +61,17 @@ long long int Annealing::read_QPC()
 	return((long long int)count.QuadPart);
 }
 //------------------------------------------------------------------------------------------------------------------------------------
-double Annealing::countSum()
+double Annealing::countSum(vector<int> countPath)
 {
-	currentSum = 0;
+	countPath.reserve(N);
+	double countSum = 0;
 
 	for (int i = 0; i < N; i++)
 	{
-		currentSum += matrix[currentPath[i]][currentPath[(i + 1) % N]];
+		countSum += matrix[countPath[i]][countPath[(i + 1) % N]];
 	}
 
-	return currentSum;
+	return countSum;
 }
 //------------------------------------------------------------------------------------------------------------------------------------
 void Annealing::startingPath() // tutaj trzeba zrobic greedy algorithm. moze zawsze najkrotsza sciezka, nie powinno byc bardzo trudne
@@ -80,7 +84,7 @@ void Annealing::startingPath() // tutaj trzeba zrobic greedy algorithm. moze zaw
 void Annealing::startingTemperature()
 {
 	cout << "Temperatura poczatkowa\n";
-	temperature = 100 + 0.1*stopTime + 1.5*a;
+	temperature = 100 + 10*stopTime + 100*a;
 }
 //------------------------------------------------------------------------------------------------------------------------------------
 void Annealing::printCurrentPath()
@@ -117,19 +121,19 @@ void Annealing::neighbourPath() // sasiedztwo swap2
 //------------------------------------------------------------------------------------------------------------------------------------
 bool Annealing::probability()
 {
-	double randomNumber = (double)(rand() / (RAND_MAX));
+	double randomNumber = (double)(rand()) / (RAND_MAX);
 	double probabilityNumber = exp(-delta / temperature);
-	cout << "randomNumber = " << randomNumber << "\n";
-	cout << "probabilityNumber = " << probabilityNumber << "\n";
+	//cout << "randomNumber = " << randomNumber << "\n";
+	//cout << "probabilityNumber = " << probabilityNumber << "\n";
 
 	if (randomNumber < probabilityNumber)
 	{
-		cout << "Prawdopodobienstwo zaakceptowane\n";
+		//cout << "Prawdopodobienstwo zaakceptowane\n";
 		return TRUE;
 	}
 	else
 	{
-		cout << "Prawdopodobienstwo odrzucone\n";
+		//cout << "Prawdopodobienstwo odrzucone\n";
 		return FALSE;
 	}
 }
@@ -137,7 +141,7 @@ bool Annealing::probability()
 void Annealing::nextTemperature()
 {
 	temperature *= a;
-	cout << "temperature = " << temperature << "\n";
+	//cout << "temperature = " << temperature << "\n";
 }
 //------------------------------------------------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------------------------------------------------
@@ -151,11 +155,6 @@ long double Annealing::TSPAnnealing()
 	start = read_QPC();
 
 	// algorytm
-	cout << "Miejsce na algorytm\n";
-	bestPath = currentPath;
-	countSum();
-	bestSum = currentSum;
-
 	tsp();
 
 	// koniec algorytmu
@@ -171,20 +170,20 @@ long double Annealing::TSPAnnealing()
 	file.open("temp.txt", ios::out);
 	file << N << endl;
 
-	cout << "Waga = " << bestSum << endl;
+	cout << "Waga = " << finalSum << endl;
 	cout << "Sciezka: ";
 
-	for (int i = 0; i <= bestPath.size(); i++)
+	for (int i = 0; i <= finalPath.size(); i++)
 	{
-		if (i != bestPath.size())
+		if (i != finalPath.size())
 		{
-			cout << bestPath[i] << "->";
-			file << bestPath[i] << "\n";
+			cout << finalPath[i] << "->";
+			file << finalPath[i] << "\n";
 		}
 		else
 		{
-			cout << bestPath[0] << "\n";
-			file << bestPath[0] << "\n";
+			cout << finalPath[0] << "\n";
+			file << finalPath[0] << "\n";
 		}
 	}
 	cout << "\n";
@@ -198,9 +197,26 @@ int Annealing::tsp()
 	const time_point<system_clock> startTime = system_clock::now();
 	seconds stopTimeSeconds = seconds(stopTime);
 
+	bestSum = countSum(bestPath);
+
 	while (temperature > 1 && (system_clock::now() - startTime) < stopTimeSeconds)
 	{
-		cout << "Algorytm w petli\n";
+		neighbourPath();
+		currentSum = countSum(currentPath);
+		delta = currentSum - bestSum;
+
+		if (delta < 0)
+		{
+			bestSum = currentSum;
+			finalSum = currentSum;
+			bestPath = currentPath;
+			finalPath = currentPath;
+		}
+		else if (probability())
+		{
+			bestSum = currentSum;
+			bestPath = currentPath;
+		}
 		nextTemperature();
 	}
 

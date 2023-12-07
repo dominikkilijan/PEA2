@@ -10,8 +10,8 @@ int choice;
 int run = 1;
 string filename = "nic";
 string filename2;
-int stopTime = 5;
-double alpha = 1;
+int stopTime = 120;
+double alpha = 0.999;
 int** adMatrix;
 int N;
 
