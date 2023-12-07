@@ -29,7 +29,6 @@ Annealing::Annealing(int n, int sTime, double alpha, int** m)
 	finalPath.reserve(N);
 
 	// wypelnienie wektora (przy greedy juz nie bedzie potrzebne)
-	cout << "Wypelnienie wektorow\n";
 	for (int i = 0; i < N; i++)
 	{
 		currentPath.emplace_back(i);
@@ -43,7 +42,7 @@ Annealing::Annealing(int n, int sTime, double alpha, int** m)
 
 	// obliczenie temperatury poczatkowej
 	startingTemperature();
-	cout << "Starting temperature = " << temperature << "\n";
+	cout << "Temperatura poczatkowa = " << temperature << "\n";
 
 	// pseudolosowosc do prawdopodobienstwa
 	srand(time(NULL));
@@ -83,8 +82,7 @@ void Annealing::startingPath() // tutaj trzeba zrobic greedy algorithm. moze zaw
 //------------------------------------------------------------------------------------------------------------------------------------
 void Annealing::startingTemperature()
 {
-	cout << "Temperatura poczatkowa\n";
-	temperature = 100 + 10*stopTime + 100*a;
+	temperature = 100 + stopTime + 100*a;
 }
 //------------------------------------------------------------------------------------------------------------------------------------
 void Annealing::printCurrentPath()
@@ -155,7 +153,7 @@ long double Annealing::TSPAnnealing()
 	start = read_QPC();
 
 	// algorytm
-	tsp();
+	simulatedAnnealing();
 
 	// koniec algorytmu
 
@@ -171,6 +169,8 @@ long double Annealing::TSPAnnealing()
 	file << N << endl;
 
 	cout << "Waga = " << finalSum << endl;
+	cout << "Prawdopodobientwo koncowe = " << exp(-delta / temperature) << endl;
+	cout << "Temperatura koncowa = " << temperature << endl;
 	cout << "Sciezka: ";
 
 	for (int i = 0; i <= finalPath.size(); i++)
@@ -192,7 +192,7 @@ long double Annealing::TSPAnnealing()
 	return timeElapsed;
 }
 //------------------------------------------------------------------------------------------------------------------------------------
-int Annealing::tsp()
+int Annealing::simulatedAnnealing()
 {
 	const time_point<system_clock> startTime = system_clock::now();
 	seconds stopTimeSeconds = seconds(stopTime);
@@ -212,7 +212,7 @@ int Annealing::tsp()
 			bestPath = currentPath;
 			finalPath = currentPath;
 		}
-		else if (probability())
+		else if (probability() > 0)
 		{
 			bestSum = currentSum;
 			bestPath = currentPath;

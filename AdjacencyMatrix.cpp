@@ -69,12 +69,11 @@ void AdjacencyMatrix::runAlgorithm(int stopTime, double alpha)
 {
 	// wyswietlenie wypelnionej macierzy
 	printAdjacencyMatrix();
+	sumElapsed = 0;
 		
 	// uruchomienie algorytmu. Na etapie mierzenia czasow modyfikowana byla liczba iteracji w petli for
 	for (int i = 0; i < 1; i++)
 	{
-		//Dynamic dynamic(N, matrix);
-		//sumElapsed += dynamic.TSPDynamic();
 		Annealing sa(N, stopTime, alpha, matrix);
 		sumElapsed += sa.TSPAnnealing();
 	}

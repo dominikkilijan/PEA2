@@ -14,7 +14,7 @@ public:
 	void startingPath();
 	void startingTemperature();
 	long double TSPAnnealing();
-	int tsp();
+	int simulatedAnnealing();
 	void printCurrentPath();
 	void PrintBestPath();
 	void neighbourPath();
