@@ -11,7 +11,7 @@ int run = 1;
 string filename = "nic";
 string filename2;
 int stopTime = 100;
-double alpha = 0.95;
+double alpha = 0.9;
 int** adMatrix;
 int N;
 

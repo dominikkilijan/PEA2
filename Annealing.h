@@ -17,8 +17,9 @@ public:
 	int tsp(int, int);
 	void printCurrentPath();
 	void PrintBestPath();
-	void neighourPath();
-	double probability();
+	void neighbourPath();
+	bool probability();
+	void nextTemperature();
 
 
 private:
@@ -31,5 +32,6 @@ private:
 	double a;
 	int stopTime;
 	double bestSum, currentSum;
+	double delta;
 };
 

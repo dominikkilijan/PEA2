@@ -18,6 +18,6 @@ public:
 
 private:
 	fstream file;
-	int** matrix;
+	int** matrix = nullptr;
 };
 
