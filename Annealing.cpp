@@ -9,8 +9,10 @@
 #include <algorithm>
 #include <random>
 #include <math.h>
+#include <chrono>
 
 using namespace std;
+using namespace std::chrono;
 
 
 //------------------------------------------------------------------------------------------------------------------------------------
@@ -18,6 +20,7 @@ Annealing::Annealing(int n, int sTime, double alpha, int** m)
 {
 	N = n;
 	stopTime = sTime;
+	
 	a = alpha;
 	matrix = m;
 	// zarezerwowanie odpowiedniej ilosci miejsca
@@ -80,6 +83,64 @@ void Annealing::startingTemperature()
 	temperature = 100 + 0.1*stopTime + 1.5*a;
 }
 //------------------------------------------------------------------------------------------------------------------------------------
+void Annealing::printCurrentPath()
+{
+	for (int i = 0; i < N; i++)
+	{
+		cout << currentPath[i] << " ";
+	}
+	cout << "\n";
+}
+//------------------------------------------------------------------------------------------------------------------------------------
+void Annealing::PrintBestPath()
+{
+	for (int i = 0; i < N; i++)
+	{
+		cout << bestPath[i] << " ";
+	}
+	cout << "\n";
+}
+//------------------------------------------------------------------------------------------------------------------------------------
+void Annealing::neighbourPath() // sasiedztwo swap2
+{
+	int id1 = 0;
+	int id2 = 0;
+
+	id1 = rand() % N;
+	do
+	{
+		id2 = rand() % N;
+	} while (id1 == id2);
+
+	iter_swap(currentPath.begin() + id1, currentPath.begin() + id2);
+}
+//------------------------------------------------------------------------------------------------------------------------------------
+bool Annealing::probability()
+{
+	double randomNumber = (double)(rand() / (RAND_MAX));
+	double probabilityNumber = exp(-delta / temperature);
+	cout << "randomNumber = " << randomNumber << "\n";
+	cout << "probabilityNumber = " << probabilityNumber << "\n";
+
+	if (randomNumber < probabilityNumber)
+	{
+		cout << "Prawdopodobienstwo zaakceptowane\n";
+		return TRUE;
+	}
+	else
+	{
+		cout << "Prawdopodobienstwo odrzucone\n";
+		return FALSE;
+	}
+}
+//------------------------------------------------------------------------------------------------------------------------------------
+void Annealing::nextTemperature()
+{
+	temperature *= a;
+	cout << "temperature = " << temperature << "\n";
+}
+//------------------------------------------------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------------------------------------------------
 long double Annealing::TSPAnnealing()
 {
 
@@ -95,8 +156,7 @@ long double Annealing::TSPAnnealing()
 	countSum();
 	bestSum = currentSum;
 
-	neighbourPath();
-	printCurrentPath();
+	tsp();
 
 	// koniec algorytmu
 
@@ -133,66 +193,17 @@ long double Annealing::TSPAnnealing()
 	return timeElapsed;
 }
 //------------------------------------------------------------------------------------------------------------------------------------
-int Annealing::tsp(int, int)
+int Annealing::tsp()
 {
-	
+	const time_point<system_clock> startTime = system_clock::now();
+	seconds stopTimeSeconds = seconds(stopTime);
+
+	while (temperature > 1 && (system_clock::now() - startTime) < stopTimeSeconds)
+	{
+		cout << "Algorytm w petli\n";
+		nextTemperature();
+	}
+
 	return 0;
-}
-//------------------------------------------------------------------------------------------------------------------------------------
-void Annealing::printCurrentPath()
-{
-	for (int i = 0; i < N; i++)
-	{
-		cout << currentPath[i] << " ";
-	}
-	cout << "\n";
-}
-//------------------------------------------------------------------------------------------------------------------------------------
-void Annealing::PrintBestPath()
-{
-	for (int i = 0; i < N; i++)
-	{
-		cout << bestPath[i] << " ";
-	}
-	cout << "\n";
-}
-//------------------------------------------------------------------------------------------------------------------------------------
-void Annealing::neighbourPath() // sasiedztwo swap2
-{
-	int id1 = -1;
-	int id2 = -1;
-
-	id1 = rand() % N;
-	do
-	{
-		id2 = rand() % N;
-	} while (id1 == id2);
-
-	iter_swap(currentPath.begin() + id1, currentPath.begin() + id2);
-}
-//------------------------------------------------------------------------------------------------------------------------------------
-bool Annealing::probability()
-{
-	double randomNumber = ((double)rand() / (RAND_MAX));
-	double probabilityNumber = exp(-delta / temperature);
-	cout << "randomNumber = " << randomNumber << "\n";
-	cout << "probabilityNumber = " << probabilityNumber << "\n";
-
-	if (randomNumber < probabilityNumber)
-	{
-		cout << "Prawdopodobienstwo zaakceptowane\n";
-		return TRUE;
-	}
-	else
-	{
-		cout << "Prawdopodobienstwo odrzucone\n";
-		return FALSE;
-	}
-}
-//------------------------------------------------------------------------------------------------------------------------------------
-void Annealing::nextTemperature()
-{
-	temperature *= a;
-	cout << "temperature = " << temperature << "\n";
 }
 //------------------------------------------------------------------------------------------------------------------------------------
