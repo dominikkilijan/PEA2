@@ -10,12 +10,12 @@ public:
 	~NearestNeighbour();
 	void findNearestNeighbourPath();
 	int findNearestNeighbour(int);
-	void printCurrentPath();
+	void printCurrentPathNN();
 
 private:
 	int** matrix;
 	int N;
 	vector<bool> visited;
-	vector<int> currentPath;
+	vector<int>& currentPathNN;
 };
 

@@ -39,10 +39,9 @@ Annealing::Annealing(int n, int sTime, double alpha, int** m)
 
 	// poczatkowa sciezka
 	//randomStartingPath();
-	NearestNeighbour nn(N, matrix, currentPath);
-	nn.findNearestNeighbourPath();
-	cout << "Po wywolaniu findNearestNeighbourPath() \n";
-	PrintBestPath();
+	//NearestNeighbour nn(N, matrix, currentPath);
+	//nn.findNearestNeighbourPath();
+	//printCurrentPath();
 
 	// obliczenie temperatury poczatkowej
 	startingTemperature();
@@ -77,7 +76,7 @@ double Annealing::countSum(vector<int> countPath)
 	return countSum;
 }
 //------------------------------------------------------------------------------------------------------------------------------------
-void Annealing::randomStartingPath() // tutaj trzeba zrobic greedy algorithm. moze zawsze najkrotsza sciezka, nie powinno byc bardzo trudne
+void Annealing::randomStartingPath() // tutaj trzeba zrobic greedy algorithm
 {
 	cout << "Poczatkowa sciezka\n";
 	auto rng = default_random_engine{};
@@ -91,7 +90,7 @@ void Annealing::startingTemperature()
 //------------------------------------------------------------------------------------------------------------------------------------
 void Annealing::printCurrentPath()
 {
-	for (int i = 0; i < N; i++)
+	for (int i = 0; i < currentPath.size(); i++)
 	{
 		cout << currentPath[i] << " ";
 	}
@@ -193,10 +192,14 @@ long double Annealing::TSPAnnealing()
 //------------------------------------------------------------------------------------------------------------------------------------
 int Annealing::simulatedAnnealing()
 {
+	NearestNeighbour nn(N, matrix, currentPath);
+	nn.findNearestNeighbourPath();
+	
 	const time_point<system_clock> startTime = system_clock::now();
 	seconds stopTimeSeconds = seconds(stopTime);
 
-	bestSum = countSum(bestPath);
+	bestSum = countSum(currentPath);
+	//cout << "wynik z greedy = " << bestSum << "\n";
 
 	while (temperature > 1 && (system_clock::now() - startTime) < stopTimeSeconds)
 	{
@@ -211,7 +214,7 @@ int Annealing::simulatedAnnealing()
 			bestPath = currentPath;
 			finalPath = currentPath;
 		}
-		else if (probability() > 0)
+		else if (probability())
 		{
 			bestSum = currentSum;
 			bestPath = currentPath;
