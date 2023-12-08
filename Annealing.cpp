@@ -116,7 +116,7 @@ void Annealing::neighbourPath() // sasiedztwo 2-opt
 
 	double newDistance = countSum(newPath);
 	double currentDistance = countSum(currentPath);
-	if (newDistance < currentDistance || probability()) {
+	if (newDistance < currentDistance) {
 		currentPath = newPath;
 	}
 

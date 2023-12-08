@@ -138,7 +138,6 @@ void AdjacencyMatrix::fillFromFileXML(fstream* file)
 	else {
 		cout << "Nie udalo sie otworzyc pliku! (w AdjacencyMatrix)\n";
 	}
-	printAdjacencyMatrix();
 }
 //------------------------------------------------------------------------------------------------------------------------------------
 void AdjacencyMatrix::runAlgorithm(int stopTime, double alpha)
