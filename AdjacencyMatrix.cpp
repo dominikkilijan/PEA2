@@ -5,6 +5,9 @@
 #include <iomanip>
 #include <fstream>
 #include <string>
+#include <regex>
+#include <sstream>
+#include <cmath>
 
 using namespace std;
 
@@ -77,9 +80,65 @@ void AdjacencyMatrix::fillFromFile(fstream* file) // do zmiany jesli zdaze
 				matrix[i][j] = val;
 			}
 		}
-		printAdjacencyMatrix();
+		//printAdjacencyMatrix();
 	}
 	else cout << "Nie udalo sie otworzyc pliku! (w AdjancencyMatrix)\n";
+}
+//------------------------------------------------------------------------------------------------------------------------------------
+void AdjacencyMatrix::fillFromFileXML(fstream* file)
+{
+	if (file->is_open())
+	{
+		string line;
+		int i = -1;
+		int j = 0;
+		while (getline(*file, line))
+		{
+			if (line.find("<description>") != string::npos)
+			{
+				std::string dimensionStr;
+				for (char c : line) {
+					if (std::isdigit(c)) {
+						dimensionStr += c;
+					}
+				}
+				N = std::stoi(dimensionStr);
+				createAdjacencyMatrix();
+			}
+			else if (line.find("<vertex>") != string::npos) {
+				i++;
+				j = 0;
+				while (getline(*file, line) && line.find("</vertex>") == string::npos) 
+				{
+					if (line.find("<edge cost=\"") != string::npos) 
+					{
+						// mantysa
+						size_t costStartPos = line.find("<edge cost=\"") + 12;
+						size_t costEndPos = line.find("e+", costStartPos);
+
+						std::string costDoubleStr = line.substr(costStartPos, costEndPos - costStartPos);
+						double costDouble = std::stod(costDoubleStr);
+
+						// exponent
+						size_t exponentPos = costEndPos + 2;
+						size_t exponentEndPos = line.find("\"", exponentPos);
+						std::string exponentStr = line.substr(exponentPos, exponentEndPos - exponentPos);
+						int exponent = std::stoi(exponentStr);
+
+						// mantysa * exponent zeby dostac wartosc krawedzi
+						int cost = static_cast<int>(costDouble * pow(10, exponent));
+
+						matrix[i][j] = cost;
+						j++;
+					}
+				}
+			}
+		}
+	}
+	else {
+		cout << "Nie udalo sie otworzyc pliku! (w AdjacencyMatrix)\n";
+	}
+	printAdjacencyMatrix();
 }
 //------------------------------------------------------------------------------------------------------------------------------------
 void AdjacencyMatrix::runAlgorithm(int stopTime, double alpha)

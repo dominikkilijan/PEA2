@@ -18,7 +18,7 @@ int** FileHandler::openFile(string filename)
 	cout << "Otwieranie pliku tekstowego \"" << filename << "\"\n";
 	file.open(filename, ios::in);
 	if (file.is_open())
-		adMat.fillFromFile(&file); // wypelnianie macierzy sasiedztwa
+		adMat.fillFromFileXML(&file); // wypelnianie macierzy sasiedztwa
 	else cout << "Nie udalo sie otworzyc pliku!\n";
 	file.close();
 	matrix = adMat.getAdjacencyMatrix();

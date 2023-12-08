@@ -9,6 +9,7 @@ public:
 	~AdjacencyMatrix();
 
 	void fillFromFile(fstream*);
+	void fillFromFileXML(fstream*);
 	void printAdjacencyMatrix();
 	void deleteAdjacencyMatrix();
 	void createAdjacencyMatrix();

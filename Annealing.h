@@ -30,10 +30,10 @@ private:
 
 	int N;
 	int** matrix;
-	double temperature;
+	long double temperature;
 	double a;
 	int stopTime;
 	double bestSum, currentSum, finalSum;
-	double delta;
+	long double delta;
 };
 

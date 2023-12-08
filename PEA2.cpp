@@ -11,7 +11,7 @@ int run = 1;
 string filename = "nic";
 string filename2;
 int stopTime = 15;
-double alpha = 0.999;
+double alpha = 0.9999999;
 int** adMatrix;
 int N;
 
@@ -41,7 +41,9 @@ int main()
         {
             cout << "Podaj nazwe pliku:\n";
             //cin >> filename;
-            filename = "br17.atsp";
+            //filename = "ftv55.atsp";
+            filename = "br17.xml";
+            //filename = "tsp_5.txt";
             N = fHandler.getN(filename);
 
             if (filename != "nic")
