@@ -13,6 +13,7 @@ public:
 	void writePathToFile(string, int, int*);
 	double readPathFromFile(string);
 	int getN(string);
+	int getNXML(string);
 	void runAlgorithm(int, double);
 	void renameFile(string, string);
 

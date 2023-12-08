@@ -42,6 +42,7 @@ Annealing::~Annealing()
 	matrix = nullptr;
 }
 //------------------------------------------------------------------------------------------------------------------------------------
+// funkcja do liczenia czasu
 long long int Annealing::read_QPC()
 {
 	LARGE_INTEGER count;
@@ -76,7 +77,7 @@ void Annealing::randomStartingPath() // tutaj trzeba zrobic greedy algorithm
 //------------------------------------------------------------------------------------------------------------------------------------
 void Annealing::startingTemperature()
 {
-	temperature = 200 * (stopTime + 100*a);
+	temperature = 100 * (stopTime + 100*a);
 }
 //------------------------------------------------------------------------------------------------------------------------------------
 void Annealing::printCurrentPath()
@@ -110,7 +111,6 @@ void Annealing::neighbourPath() // sasiedztwo 2-opt
 		swap(id1, id2);
 	}
 	vector<int> newPath = currentPath;
-	//printCurrentPath();
 	// 2-opt
 	reverse(newPath.begin() + id1, newPath.begin() + id2 + 1);
 
@@ -120,7 +120,6 @@ void Annealing::neighbourPath() // sasiedztwo 2-opt
 		currentPath = newPath;
 	}
 
-	//printCurrentPath();
 }
 //------------------------------------------------------------------------------------------------------------------------------------
 bool Annealing::probability()

@@ -57,12 +57,14 @@ void AdjacencyMatrix::fillFromFile(fstream* file) // do zmiany jesli zdaze
 		{
 			if (line.find("DIMENSION") != string::npos) 
 			{
+				// odzczytanie znakow w linii z DIMENSION
 				std::string dimensionStr;
 				for (char c : line) {
 					if (std::isdigit(c)) {
 						dimensionStr += c;
 					}
 				}
+				// do N wpisane zostaja cyfry czyli liczba wierzcholkow 
 				N = std::stoi(dimensionStr);
 
 				createAdjacencyMatrix();
@@ -80,7 +82,6 @@ void AdjacencyMatrix::fillFromFile(fstream* file) // do zmiany jesli zdaze
 				matrix[i][j] = val;
 			}
 		}
-		//printAdjacencyMatrix();
 	}
 	else cout << "Nie udalo sie otworzyc pliku! (w AdjancencyMatrix)\n";
 }
@@ -94,7 +95,8 @@ void AdjacencyMatrix::fillFromFileXML(fstream* file)
 		int j = 0;
 		while (getline(*file, line))
 		{
-			if (line.find("<description>") != string::npos)
+			// liczba wierzcholkow jest w nazwie pliku np xyz27.xml
+			if (line.find("<name>") != string::npos)
 			{
 				std::string dimensionStr;
 				for (char c : line) {
@@ -105,21 +107,21 @@ void AdjacencyMatrix::fillFromFileXML(fstream* file)
 				N = std::stoi(dimensionStr);
 				createAdjacencyMatrix();
 			}
-			else if (line.find("<vertex>") != string::npos) {
+			if (line.find("<vertex>") != string::npos) {
 				i++;
 				j = 0;
 				while (getline(*file, line) && line.find("</vertex>") == string::npos) 
 				{
 					if (line.find("<edge cost=\"") != string::npos) 
 					{
-						// mantysa
+						// mantysa miedzy <edge cost=" i e+
 						size_t costStartPos = line.find("<edge cost=\"") + 12;
 						size_t costEndPos = line.find("e+", costStartPos);
 
 						std::string costDoubleStr = line.substr(costStartPos, costEndPos - costStartPos);
 						double costDouble = std::stod(costDoubleStr);
 
-						// exponent
+						// exponent miedzy e+ i "
 						size_t exponentPos = costEndPos + 2;
 						size_t exponentEndPos = line.find("\"", exponentPos);
 						std::string exponentStr = line.substr(exponentPos, exponentEndPos - exponentPos);
@@ -131,6 +133,7 @@ void AdjacencyMatrix::fillFromFileXML(fstream* file)
 						matrix[i][j] = cost;
 						j++;
 					}
+					cout << "j po ifie = " << j << endl;
 				}
 			}
 		}
@@ -142,8 +145,6 @@ void AdjacencyMatrix::fillFromFileXML(fstream* file)
 //------------------------------------------------------------------------------------------------------------------------------------
 void AdjacencyMatrix::runAlgorithm(int stopTime, double alpha)
 {
-	// wyswietlenie wypelnionej macierzy
-	//printAdjacencyMatrix();
 	sumElapsed = 0;
 		
 	// uruchomienie algorytmu. Na etapie mierzenia czasow modyfikowana byla liczba iteracji w petli for

@@ -42,8 +42,9 @@ int main()
             cout << "Podaj nazwe pliku:\n";
             //cin >> filename;
             //filename = "ftv55.atsp";
+            //filename = "ftv170.atsp";
+            //filename = "rbg358.atsp";
             filename = "br17.xml";
-            //filename = "tsp_5.txt";
             N = fHandler.getN(filename);
 
             if (filename != "nic")
