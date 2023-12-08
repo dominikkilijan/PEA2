@@ -19,15 +19,17 @@ void NearestNeighbour::findNearestNeighbourPath()
 {
 	int start = 0;
 	currentPathNN.emplace_back(start);
-	visited[start] = true;
+
+	if (start >= 0 && start < N)
+		visited[start] = true;
 
 	for (int i = 0; i < N-1; i++)
 	{
 		int nearestNeighbour = findNearestNeighbour(start);
 		currentPathNN.emplace_back(nearestNeighbour);
-		visited[nearestNeighbour] = true;
+		if (nearestNeighbour >= 0 && nearestNeighbour < N)
+			visited[nearestNeighbour] = true;
 		start = nearestNeighbour;
-		//printCurrentPathNN();
 	}
 }
 //------------------------------------------------------------------------------------------------------------------------------------

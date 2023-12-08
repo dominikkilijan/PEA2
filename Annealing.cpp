@@ -29,20 +29,6 @@ Annealing::Annealing(int n, int sTime, double alpha, int** m)
 	bestPath.reserve(N);
 	finalPath.reserve(N);
 
-	// wypelnienie wektora (przy greedy juz nie bedzie potrzebne)
-	/*for (int i = 0; i < N; i++)
-	{
-		currentPath.emplace_back(i);
-		bestPath.emplace_back(i);
-		finalPath.emplace_back(i);
-	}*/
-
-	// poczatkowa sciezka
-	//randomStartingPath();
-	//NearestNeighbour nn(N, matrix, currentPath);
-	//nn.findNearestNeighbourPath();
-	//printCurrentPath();
-
 	// obliczenie temperatury poczatkowej
 	startingTemperature();
 	cout << "Temperatura poczatkowa = " << temperature << "\n";
@@ -78,6 +64,11 @@ double Annealing::countSum(vector<int> countPath)
 //------------------------------------------------------------------------------------------------------------------------------------
 void Annealing::randomStartingPath() // tutaj trzeba zrobic greedy algorithm
 {
+	for (int i = 0; i < N; i++)
+	{
+		currentPath.emplace_back(i);
+	}
+	
 	cout << "Poczatkowa sciezka\n";
 	auto rng = default_random_engine{};
 	shuffle(begin(currentPath), end(currentPath), rng);
@@ -99,7 +90,7 @@ void Annealing::printCurrentPath()
 //------------------------------------------------------------------------------------------------------------------------------------
 void Annealing::PrintBestPath()
 {
-	for (int i = 0; i < N; i++)
+	for (int i = 0; i < bestPath.size(); i++)
 	{
 		cout << bestPath[i] << " ";
 	}
@@ -110,12 +101,12 @@ void Annealing::neighbourPath() // sasiedztwo swap2
 {
 	int id1 = 0;
 	int id2 = 0;
-
 	id1 = rand() % N;
 	do
 	{
 		id2 = rand() % N;
 	} while (id1 == id2);
+	//cout << "id1, id2 = " << id1 << ", " << id2 << "\n";
 
 	iter_swap(currentPath.begin() + id1, currentPath.begin() + id2);
 }
@@ -139,7 +130,6 @@ void Annealing::nextTemperature()
 {
 	temperature *= a;
 }
-//------------------------------------------------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------------------------------------------------
 long double Annealing::TSPAnnealing()
 {
@@ -192,8 +182,9 @@ long double Annealing::TSPAnnealing()
 //------------------------------------------------------------------------------------------------------------------------------------
 int Annealing::simulatedAnnealing()
 {
-	NearestNeighbour nn(N, matrix, currentPath);
-	nn.findNearestNeighbourPath();
+	//NearestNeighbour nn(N, matrix, currentPath);
+	//nn.findNearestNeighbourPath();
+	randomStartingPath();
 	
 	const time_point<system_clock> startTime = system_clock::now();
 	seconds stopTimeSeconds = seconds(stopTime);
@@ -203,6 +194,7 @@ int Annealing::simulatedAnnealing()
 
 	while (temperature > 1 && (system_clock::now() - startTime) < stopTimeSeconds)
 	{
+		// ewentualnie tutaj jeszcze petla z epokami
 		neighbourPath();
 		currentSum = countSum(currentPath);
 		delta = currentSum - bestSum;

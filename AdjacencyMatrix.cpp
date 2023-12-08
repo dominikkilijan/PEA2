@@ -3,6 +3,8 @@
 #include "Annealing.h"
 #include <iostream>
 #include <iomanip>
+#include <fstream>
+#include <string>
 
 using namespace std;
 
@@ -45,14 +47,28 @@ void AdjacencyMatrix::deleteAdjacencyMatrix()
 
 void AdjacencyMatrix::fillFromFile(fstream* file) // do zmiany jesli zdaze
 {
-	if (file->is_open())
+	if (file->is_open()) 
 	{
-		int val;
-		*file >> N; // pierwsza liczba w pliku oznacza liczbe wierzcholkow
+		string line;
+		while (getline(*file, line)) 
+		{
+			if (line.find("DIMENSION") != string::npos) 
+			{
+				std::string dimensionStr;
+				for (char c : line) {
+					if (std::isdigit(c)) {
+						dimensionStr += c;
+					}
+				}
+				N = std::stoi(dimensionStr);
 
-		createAdjacencyMatrix();
-
+				createAdjacencyMatrix();
+			}
+			else if (line.find("EDGE_WEIGHT_SECTION") != std::string::npos)
+				break;
+		}
 		// uzupelnienie macietrzy
+		int val;
 		for (int i = 0; i < N; i++)
 		{
 			for (int j = 0; j < N; j++)
@@ -61,6 +77,7 @@ void AdjacencyMatrix::fillFromFile(fstream* file) // do zmiany jesli zdaze
 				matrix[i][j] = val;
 			}
 		}
+		printAdjacencyMatrix();
 	}
 	else cout << "Nie udalo sie otworzyc pliku! (w AdjancencyMatrix)\n";
 }
@@ -68,7 +85,7 @@ void AdjacencyMatrix::fillFromFile(fstream* file) // do zmiany jesli zdaze
 void AdjacencyMatrix::runAlgorithm(int stopTime, double alpha)
 {
 	// wyswietlenie wypelnionej macierzy
-	printAdjacencyMatrix();
+	//printAdjacencyMatrix();
 	sumElapsed = 0;
 		
 	// uruchomienie algorytmu. Na etapie mierzenia czasow modyfikowana byla liczba iteracji w petli for

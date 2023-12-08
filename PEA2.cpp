@@ -10,7 +10,7 @@ int choice;
 int run = 1;
 string filename = "nic";
 string filename2;
-int stopTime = 120;
+int stopTime = 15;
 double alpha = 0.999;
 int** adMatrix;
 int N;
@@ -41,7 +41,7 @@ int main()
         {
             cout << "Podaj nazwe pliku:\n";
             //cin >> filename;
-            filename = "tsp_5.txt";
+            filename = "br17.atsp";
             N = fHandler.getN(filename);
 
             if (filename != "nic")
