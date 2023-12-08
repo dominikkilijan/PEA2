@@ -48,7 +48,8 @@ void AdjacencyMatrix::deleteAdjacencyMatrix()
 }
 //------------------------------------------------------------------------------------------------------------------------------------
 
-void AdjacencyMatrix::fillFromFile(fstream* file) // do zmiany jesli zdaze
+// wypelnienie macierzy z podstawowego formatu
+void AdjacencyMatrix::fillFromFile(fstream* file)
 {
 	if (file->is_open()) 
 	{
@@ -57,7 +58,7 @@ void AdjacencyMatrix::fillFromFile(fstream* file) // do zmiany jesli zdaze
 		{
 			if (line.find("DIMENSION") != string::npos) 
 			{
-				// odzczytanie znakow w linii z DIMENSION
+				// odczytanie znakow w linii z DIMENSION
 				std::string dimensionStr;
 				for (char c : line) {
 					if (std::isdigit(c)) {
@@ -93,20 +94,36 @@ void AdjacencyMatrix::fillFromFileXML(fstream* file)
 		string line;
 		int i = -1;
 		int j = 0;
+		int linesCount = 0;
+		
+		// liczenie N
 		while (getline(*file, line))
 		{
-			// liczba wierzcholkow jest w nazwie pliku np xyz27.xml
-			if (line.find("<name>") != string::npos)
+			if (line.find("<vertex>") != string::npos) 
 			{
-				std::string dimensionStr;
-				for (char c : line) {
-					if (std::isdigit(c)) {
-						dimensionStr += c;
+				while (getline(*file, line) && line.find("</vertex>") == string::npos)
+				{
+					if (line.find("<edge cost=\"") != string::npos)
+					{
+						// Increment linesCount for each line between <vertex> and </vertex>
+						linesCount++;
 					}
 				}
-				N = std::stoi(dimensionStr);
-				createAdjacencyMatrix();
+				// Break the outer loop after processing the first <vertex> and </vertex>
+				break;
 			}
+		}
+
+		N = linesCount;
+
+		// powrot kursora na szczyt pliku
+		file->clear();
+		file->seekg(0, std::ios::beg);
+
+		createAdjacencyMatrix();
+
+		while (getline(*file, line))
+		{
 			if (line.find("<vertex>") != string::npos) {
 				i++;
 				j = 0;
@@ -129,16 +146,16 @@ void AdjacencyMatrix::fillFromFileXML(fstream* file)
 
 						// mantysa * exponent zeby dostac wartosc krawedzi
 						int cost = static_cast<int>(costDouble * pow(10, exponent));
-
+						cout << "ij = " << i << j << endl;
 						matrix[i][j] = cost;
 						j++;
 					}
-					cout << "j po ifie = " << j << endl;
 				}
 			}
 		}
 	}
-	else {
+	else 
+	{
 		cout << "Nie udalo sie otworzyc pliku! (w AdjacencyMatrix)\n";
 	}
 }

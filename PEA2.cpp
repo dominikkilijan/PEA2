@@ -40,11 +40,11 @@ int main()
         case 1:
         {
             cout << "Podaj nazwe pliku:\n";
-            //cin >> filename;
+            cin >> filename;
             //filename = "ftv55.atsp";
             //filename = "ftv170.atsp";
             //filename = "rbg358.atsp";
-            filename = "br17.xml";
+            //filename = "br17.xml";
             N = fHandler.getN(filename);
 
             if (filename != "nic")
