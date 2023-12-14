@@ -13,7 +13,7 @@ using namespace std;
 AdjacencyMatrix adMat;
 
 //------------------------------------------------------------------------------------------------------------------------------------
-int** FileHandler::openFile(string filename)
+void FileHandler::openFile(string filename)
 {
 	cout << "Otwieranie pliku tekstowego \"" << filename << "\"\n";
 	file.open(filename, ios::in);
@@ -22,7 +22,6 @@ int** FileHandler::openFile(string filename)
 	else cout << "Nie udalo sie otworzyc pliku!\n";
 	file.close();
 	matrix = adMat.getAdjacencyMatrix();
-	return matrix;
 }
 //------------------------------------------------------------------------------------------------------------------------------------
 double FileHandler::readPathFromFile(string filename)
@@ -44,22 +43,7 @@ double FileHandler::readPathFromFile(string filename)
 		}
 		cout << "\n";
 	}
-	
 	return sum;
-}
-//------------------------------------------------------------------------------------------------------------------------------------
-int FileHandler::getN(string filename)
-{
-	int N = 0;
-	file.open(filename, ios::in);
-	if (file.is_open())
-	{
-		file >> N;
-	}
-	else cout << "Nie udalo sie otworzyc pliku!\n";
-	file.close();
-	
-	return N;
 }
 //------------------------------------------------------------------------------------------------------------------------------------
 void FileHandler::runAlgorithm(int stopTime, double alpha)

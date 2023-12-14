@@ -32,9 +32,9 @@ Annealing::Annealing(int n, int sTime, double alpha, int** m)
 	// obliczenie temperatury poczatkowej
 	startingTemperature();
 	cout << "Temperatura poczatkowa = " << temperature << "\n";
-
+	halfTemperature = temperature / 2;
 	// pseudolosowosc do prawdopodobienstwa
-	srand(time(NULL));
+	srand(temperature + time(NULL));
 }
 //------------------------------------------------------------------------------------------------------------------------------------
 Annealing::~Annealing()
@@ -63,21 +63,15 @@ double Annealing::countSum(vector<int> countPath)
 	return countSum;
 }
 //------------------------------------------------------------------------------------------------------------------------------------
-void Annealing::randomStartingPath() // tutaj trzeba zrobic greedy algorithm
-{
-	for (int i = 0; i < N; i++)
-	{
-		currentPath.emplace_back(i);
-	}
-	
-	cout << "Poczatkowa sciezka\n";
+void Annealing::randomPath() // tutaj trzeba zrobic greedy algorithm
+{	
 	auto rng = default_random_engine{};
 	shuffle(begin(currentPath), end(currentPath), rng);
 }
 //------------------------------------------------------------------------------------------------------------------------------------
 void Annealing::startingTemperature()
 {
-	temperature = 100 * (stopTime + 100*a);
+	temperature = 5 * (100*stopTime + 100*a);
 }
 //------------------------------------------------------------------------------------------------------------------------------------
 void Annealing::printCurrentPath()
@@ -116,10 +110,11 @@ void Annealing::neighbourPath() // sasiedztwo 2-opt
 
 	double newDistance = countSum(newPath);
 	double currentDistance = countSum(currentPath);
-	if (newDistance < currentDistance) {
+	/*if (newDistance < currentDistance) 
+	{
 		currentPath = newPath;
-	}
-
+	}*/
+	currentPath = newPath;
 }
 //------------------------------------------------------------------------------------------------------------------------------------
 bool Annealing::probability()
@@ -140,6 +135,7 @@ bool Annealing::probability()
 void Annealing::nextTemperature()
 {
 	temperature *= a;
+	//cout << "Temperature = " << temperature << "\n";
 }
 //------------------------------------------------------------------------------------------------------------------------------------
 long double Annealing::TSPAnnealing()
@@ -196,44 +192,79 @@ int Annealing::simulatedAnnealing()
 {
 	NearestNeighbour nn(N, matrix, currentPath);
 	nn.findNearestNeighbourPath();
-	//randomStartingPath();
 	
 	const time_point<system_clock> startTime = system_clock::now();
 	seconds stopTimeSeconds = seconds(stopTime);
 
 	bestSum = countSum(currentPath);
 	finalSum = bestSum;
+	finalPath = currentPath;
+	int epochs;
+	int worse = 0;
 	int greedySum = bestSum;
 	cout << "wynik z greedy = " << greedySum << "\n";
+	cout << "finalSum = " << finalSum << "\n";
 
 	while (temperature > 0.000001 && (system_clock::now() - startTime) < stopTimeSeconds)
 	{
-		for (int i = 0;i < 5; i++)
+		//cout << "epoki = " << epochs << "\n";
+		epochs = 100;
+		//epochs = floor(temperature / 100) + 1;
+		//cout << "epoki = " << epochs << "\n";
+		for (int i = 0; i < epochs; i++)
 		{
-		neighbourPath();
-		currentSum = countSum(currentPath);
-		delta = currentSum - bestSum;
+			/*if (temperature > halfTemperature)
+				randomPath();
+			else*/			
+				neighbourPath();
 
-		if (delta < 0)
-		{
-			bestSum = currentSum;
-			bestPath = currentPath;
-			finalSum = currentSum;
-			finalPath = currentPath;
-			/*if (bestSum < greedySum)
+
+			//printCurrentPath();
+			currentSum = countSum(currentPath);
+			//cout << "currentSum = " << currentSum << "\n";
+			delta = currentSum - bestSum;
+			//cout << "delta = " << delta << "\n";
+
+			if (delta < 0)
 			{
-				finalSum = currentSum;
-				finalPath = currentPath;
-			}*/
+				bestSum = currentSum;
+				bestPath = currentPath;
+				//cout << "bestSum = " << bestSum << "\n";
+
+				if (finalSum > currentSum)
+				{
+					finalSum = currentSum;
+					finalPath = currentPath;
+					cout << "finalSum = " << finalSum << "\n";
+				}
+				else if (finalSum < currentSum)
+				{
+					worse++;
+				}
+			}
+			else if (probability())
+			{
+				//cout << endl;
+				bestSum = currentSum;
+				bestPath = currentPath;
+				worse++;
+			}
+			else
+				worse++;
+
+			if (worse > 15)
+			{
+				worse = 0;
+				currentSum = finalSum;
+				currentPath = finalPath;
+				bestSum = finalSum;
+				bestPath = finalPath;
+				//cout << "currentSum = " << currentSum << "\n";
+			}
 		}
-		else if (probability())
-		{
-			bestSum = currentSum;
-			bestPath = currentPath;
-		}
-		
-		}
+		//cout << "currnetSum:" << currentSum << " ";
 		nextTemperature();
+		epochs = 7;
 	}
 
 	return 0;

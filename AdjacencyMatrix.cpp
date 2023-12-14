@@ -18,7 +18,7 @@ AdjacencyMatrix::~AdjacencyMatrix()
 	deleteAdjacencyMatrix();
 }
 //------------------------------------------------------------------------------------------------------------------------------------
-// utworzenie macierzy o wymiarach n na n. Macierz wypelniona jest wartosciami -1
+// utworzenie macierzy o wymiarach N na N. Macierz wypelniona jest wartosciami -1
 void AdjacencyMatrix::createAdjacencyMatrix()
 {
 	matrix = new int* [N];
@@ -61,7 +61,8 @@ void AdjacencyMatrix::fillFromFile(fstream* file)
 				// odczytanie znakow w linii z DIMENSION
 				std::string dimensionStr;
 				for (char c : line) {
-					if (std::isdigit(c)) {
+					if (std::isdigit(c)) 
+					{
 						dimensionStr += c;
 					}
 				}
@@ -99,17 +100,17 @@ void AdjacencyMatrix::fillFromFileXML(fstream* file)
 		// liczenie N
 		while (getline(*file, line))
 		{
+			// zliczanie linii miedzy <vertex> a </vertex>
 			if (line.find("<vertex>") != string::npos) 
 			{
 				while (getline(*file, line) && line.find("</vertex>") == string::npos)
 				{
 					if (line.find("<edge cost=\"") != string::npos)
 					{
-						// Increment linesCount for each line between <vertex> and </vertex>
 						linesCount++;
 					}
 				}
-				// Break the outer loop after processing the first <vertex> and </vertex>
+				// wyjscie z petli bo wystarczy jedno liczenie
 				break;
 			}
 		}
@@ -124,6 +125,7 @@ void AdjacencyMatrix::fillFromFileXML(fstream* file)
 
 		while (getline(*file, line))
 		{
+			// co <vertex> nowy rzad w matrix
 			if (line.find("<vertex>") != string::npos) {
 				i++;
 				j = 0;
@@ -146,7 +148,7 @@ void AdjacencyMatrix::fillFromFileXML(fstream* file)
 
 						// mantysa * exponent zeby dostac wartosc krawedzi
 						int cost = static_cast<int>(costDouble * pow(10, exponent));
-						cout << "ij = " << i << j << endl;
+						//cout << "ij = " << i << j << endl;
 						matrix[i][j] = cost;
 						j++;
 					}

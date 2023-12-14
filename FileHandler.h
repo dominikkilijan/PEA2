@@ -7,13 +7,8 @@ using namespace std;
 class FileHandler
 {
 public:
-	int** openFile(string);
-	void generate(int, string);
-	void print(string);
-	void writePathToFile(string, int, int*);
+	void openFile(string);
 	double readPathFromFile(string);
-	int getN(string);
-	int getNXML(string);
 	void runAlgorithm(int, double);
 	void renameFile(string, string);
 

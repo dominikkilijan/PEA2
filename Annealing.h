@@ -12,7 +12,7 @@ public:
 	long long int read_QPC();
 	double countSum(vector<int>);
 	void startingPath();
-	void randomStartingPath();
+	void randomPath();
 	void startingTemperature();
 	long double TSPAnnealing();
 	int simulatedAnnealing();
@@ -30,7 +30,7 @@ private:
 
 	int N;
 	int** matrix;
-	long double temperature;
+	long double temperature, halfTemperature;
 	double a;
 	int stopTime;
 	double bestSum, currentSum, finalSum;

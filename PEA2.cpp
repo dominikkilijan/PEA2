@@ -10,10 +10,8 @@ int choice;
 int run = 1;
 string filename = "nic";
 string filename2;
-int stopTime = 15;
-double alpha = 0.9999999;
-int** adMatrix;
-int N;
+int stopTime = 3;
+double alpha = 0.999;
 
 
 int main()
@@ -40,15 +38,11 @@ int main()
         case 1:
         {
             cout << "Podaj nazwe pliku:\n";
-            cin >> filename;
-            //filename = "ftv55.atsp";
-            //filename = "ftv170.atsp";
-            //filename = "rbg358.atsp";
+            //cin >> filename;
+            filename = "ftv55.xml";
             //filename = "br17.xml";
-            N = fHandler.getN(filename);
-
             if (filename != "nic")
-                adMatrix = fHandler.openFile(filename);
+                fHandler.openFile(filename);
             else
                 cout << "Wczytaj dane z pliku!\n";
             choice = 4;
@@ -94,13 +88,13 @@ int main()
             if (filename != "nic")
             {
                 cout << "Podaj nazwe pliku:\n";
-                //cin >> filename2;
-                filename2 = "temp.txt";
+                cin >> filename2;
+                //filename2 = "temp.txt";
                 double fileSum = fHandler.readPathFromFile(filename2);
                 cout << "Waga = " << fileSum << "\n";
             }
             else
-                cout << "Wczytaj dane z pliku!\n";
+                cout << "Wczytaj macierz z pliku!\n";
             
         }
         break;
@@ -110,17 +104,6 @@ int main()
             run = 0;
         }
         break;
-        case 8:
-        {
-            for (int i = 0; i < N; i++)
-            {
-                for (int j = 0; j < N; j++)
-                {
-                    cout << adMatrix[i][j] << "\t";
-                }
-                cout << "\n";
-            }
-        }
         default:
             cout << "Nieprawidlowy numer!\n";
             break;
