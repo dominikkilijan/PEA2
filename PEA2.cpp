@@ -11,7 +11,7 @@ int run = 1;
 string filename = "nic";
 string filename2;
 int stopTime = 3;
-double alpha = 0.999;
+double alpha = 0.99999;
 
 
 int main()

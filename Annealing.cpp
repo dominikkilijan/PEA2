@@ -21,6 +21,7 @@ Annealing::Annealing(int n, int sTime, double alpha, int** m)
 {
 	N = n;
 	stopTime = sTime;
+	stopTemperature = 0.000001;
 	
 	a = alpha;
 	matrix = m;
@@ -35,11 +36,23 @@ Annealing::Annealing(int n, int sTime, double alpha, int** m)
 	halfTemperature = temperature / 2;
 	// pseudolosowosc do prawdopodobienstwa
 	srand(temperature + time(NULL));
+
+	// zmienne zwiazane z pomiarem czasu
+	long long int frequency = 0;
+	long long int start = 0;
+	long long int elapsed = 0; 
+	QueryPerformanceFrequency((LARGE_INTEGER*)&frequency);
 }
 //------------------------------------------------------------------------------------------------------------------------------------
 Annealing::~Annealing()
 {
 	matrix = nullptr;
+}
+//------------------------------------------------------------------------------------------------------------------------------------
+void Annealing::startingTemperature()
+{
+	temperature = -100 * stopTime * log(a) * 1/stopTemperature;
+	//temperature = 15 * (100 * stopTime + 100 * a);
 }
 //------------------------------------------------------------------------------------------------------------------------------------
 // funkcja do liczenia czasu
@@ -67,11 +80,6 @@ void Annealing::randomPath() // tutaj trzeba zrobic greedy algorithm
 {	
 	auto rng = default_random_engine{};
 	shuffle(begin(currentPath), end(currentPath), rng);
-}
-//------------------------------------------------------------------------------------------------------------------------------------
-void Annealing::startingTemperature()
-{
-	temperature = 5 * (100*stopTime + 100*a);
 }
 //------------------------------------------------------------------------------------------------------------------------------------
 void Annealing::printCurrentPath()
@@ -105,15 +113,12 @@ void Annealing::neighbourPath() // sasiedztwo 2-opt
 		swap(id1, id2);
 	}
 	vector<int> newPath = currentPath;
-	// 2-opt
+	
 	reverse(newPath.begin() + id1, newPath.begin() + id2 + 1);
 
 	double newDistance = countSum(newPath);
 	double currentDistance = countSum(currentPath);
-	/*if (newDistance < currentDistance) 
-	{
-		currentPath = newPath;
-	}*/
+
 	currentPath = newPath;
 }
 //------------------------------------------------------------------------------------------------------------------------------------
@@ -135,14 +140,12 @@ bool Annealing::probability()
 void Annealing::nextTemperature()
 {
 	temperature *= a;
-	//cout << "Temperature = " << temperature << "\n";
 }
 //------------------------------------------------------------------------------------------------------------------------------------
 long double Annealing::TSPAnnealing()
 {
 
-	long long int frequency, start, elapsed; // zmienne zwiazane z pomiarem czasu
-	QueryPerformanceFrequency((LARGE_INTEGER*)&frequency);
+	
 
 	// rozpoczecie pomiaru czasu
 	start = read_QPC();
@@ -154,9 +157,9 @@ long double Annealing::TSPAnnealing()
 
 
 	// koniec pomiaru czasu
-	elapsed = read_QPC() - start;
-	long double timeElapsed;
-	timeElapsed = ((1000.0 * elapsed) / frequency);
+	//elapsed = read_QPC() - start;
+	long double timeElapsed = 0;
+	//timeElapsed = ((1000.0 * elapsed) / frequency);
 
 	// wyswietlenie wyniku i zapisanie do pliku
 	fstream file;
@@ -164,9 +167,10 @@ long double Annealing::TSPAnnealing()
 	file << N << endl;
 	long double finalTemp = exp(-delta / temperature);
 
-	cout << "Waga = " << finalSum << endl;
-	cout << "Prawdopodobientwo koncowe = " << finalTemp << endl;
+	cout << "\n\nWaga = " << finalSum << endl;
+	cout << "Prawdopodobienstwo koncowe = " << finalTemp << endl;
 	cout << "Temperatura koncowa = " << temperature << endl;
+	cout << "Czas znaleznienia najlepszego rozwiazania w ms: " << setprecision(10) << finalElapsed << endl;
 	cout << "Sciezka: ";
 
 	for (int i = 0; i <= finalPath.size(); i++)
@@ -195,29 +199,21 @@ int Annealing::simulatedAnnealing()
 	
 	const time_point<system_clock> startTime = system_clock::now();
 	seconds stopTimeSeconds = seconds(stopTime);
-
+	seconds finalTime;
 	bestSum = countSum(currentPath);
 	finalSum = bestSum;
 	finalPath = currentPath;
-	int epochs;
+	int epochs = 100;
 	int worse = 0;
 	int greedySum = bestSum;
 	cout << "wynik z greedy = " << greedySum << "\n";
 	cout << "finalSum = " << finalSum << "\n";
 
-	while (temperature > 0.000001 && (system_clock::now() - startTime) < stopTimeSeconds)
+	while (temperature > stopTemperature && (system_clock::now() - startTime) < stopTimeSeconds)
 	{
-		//cout << "epoki = " << epochs << "\n";
-		epochs = 100;
-		//epochs = floor(temperature / 100) + 1;
-		//cout << "epoki = " << epochs << "\n";
 		for (int i = 0; i < epochs; i++)
-		{
-			/*if (temperature > halfTemperature)
-				randomPath();
-			else*/			
-				neighbourPath();
-
+		{		
+			neighbourPath();
 
 			//printCurrentPath();
 			currentSum = countSum(currentPath);
@@ -235,24 +231,26 @@ int Annealing::simulatedAnnealing()
 				{
 					finalSum = currentSum;
 					finalPath = currentPath;
+
+					cout << "start = " << start << "\n";
+					QueryPerformanceFrequency((LARGE_INTEGER*)&frequency);
+					cout << "frequency = " << frequency << "\n";
+
 					cout << "finalSum = " << finalSum << "\n";
+					finalElapsed = ((1000.0 * (read_QPC() - start)) / frequency);
+					cout << "finalElapsed = " << finalElapsed << "\n";
 				}
 				else if (finalSum < currentSum)
-				{
 					worse++;
-				}
 			}
 			else if (probability())
 			{
 				//cout << endl;
 				bestSum = currentSum;
 				bestPath = currentPath;
-				worse++;
+				//worse++;
 			}
-			else
-				worse++;
-
-			if (worse > 15)
+			else if (!probability() && worse > 15) // chyba jest za dobrze. Przesun zeby sie wykonywalo tylko jesli probability nie zadziala
 			{
 				worse = 0;
 				currentSum = finalSum;
@@ -261,10 +259,11 @@ int Annealing::simulatedAnnealing()
 				bestPath = finalPath;
 				//cout << "currentSum = " << currentSum << "\n";
 			}
+			else
+				worse++;
 		}
 		//cout << "currnetSum:" << currentSum << " ";
 		nextTemperature();
-		epochs = 7;
 	}
 
 	return 0;

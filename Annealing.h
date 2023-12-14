@@ -30,10 +30,13 @@ private:
 
 	int N;
 	int** matrix;
-	long double temperature, halfTemperature;
+	long double temperature, halfTemperature, stopTemperature;
 	double a;
 	int stopTime;
 	double bestSum, currentSum, finalSum;
 	long double delta;
+	long double finalElapsed;
+
+	long long int start, elapsed, frequency;
 };
 
