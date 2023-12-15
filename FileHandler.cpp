@@ -56,6 +56,10 @@ void FileHandler::renameFile(string a, string b)
 	rename(a.c_str(), b.c_str());
 }
 //------------------------------------------------------------------------------------------------------------------------------------
-
+FileHandler::~FileHandler()
+{
+	adMat.deleteAdjacencyMatrix();
+	matrix = nullptr;
+}
 
 

@@ -17,19 +17,24 @@ NearestNeighbour::~NearestNeighbour()
 //------------------------------------------------------------------------------------------------------------------------------------
 void NearestNeighbour::findNearestNeighbourPath()
 {
+	// wierzcholek startowy
 	int start = 0;
 	currentPathNN.emplace_back(start);
 
+	// zaznaczenie ze odwiedzono wierzcholek startowy
 	if (start >= 0 && start < N)
 		visited[start] = true;
 
 	for (int i = 0; i < N-1; i++)
 	{
+		// znalezienie i dodanie do tablicy najkrotszego odcinka od danego wierzcholka
 		int nearestNeighbour = findNearestNeighbour(start);
 		currentPathNN.emplace_back(nearestNeighbour);
+
+		// zaznaczenie ze odwiedzono wierzcholek
 		if (nearestNeighbour >= 0 && nearestNeighbour < N)
 			visited[nearestNeighbour] = true;
-		start = nearestNeighbour;
+		start = nearestNeighbour; // nastepny wierzcholek
 	}
 }
 //------------------------------------------------------------------------------------------------------------------------------------
@@ -40,6 +45,7 @@ int NearestNeighbour::findNearestNeighbour(int v)
 
 	for (int i = 0; i < N; i++)
 	{
+		// jesli sprawdzany wierzcholek nie byl odwiedzony i odleglosc jest mniejsza
 		if (!visited[i] && matrix[v][i] < minDistance)
 		{
 			minDistance = matrix[v][i];

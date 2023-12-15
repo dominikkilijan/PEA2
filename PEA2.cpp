@@ -10,8 +10,8 @@ int choice;
 int run = 1;
 string filename = "nic";
 string filename2;
-int stopTime = 3;
-double alpha = 0.99999;
+int stopTime = 15;
+double alpha = 0.9999;
 
 
 int main()
@@ -31,16 +31,15 @@ int main()
         cout << "7. Zakoncz\n";
 
         cin >> choice;
-        //choice = 1;
+
         system("CLS"); // czyszczenie ekranu
         switch (choice)
         {
         case 1:
         {
             cout << "Podaj nazwe pliku:\n";
-            //cin >> filename;
-            filename = "ftv55.xml";
-            //filename = "br17.xml";
+            cin >> filename;
+            
             if (filename != "nic")
                 fHandler.openFile(filename);
             else
@@ -89,7 +88,7 @@ int main()
             {
                 cout << "Podaj nazwe pliku:\n";
                 cin >> filename2;
-                //filename2 = "temp.txt";
+
                 double fileSum = fHandler.readPathFromFile(filename2);
                 cout << "Waga = " << fileSum << "\n";
             }
